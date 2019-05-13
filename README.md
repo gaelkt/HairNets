@@ -6,7 +6,7 @@ This repository contains the implementation of a deep learning algorithm to clas
 
 - One other CNN is used to classify hair segment into type a, b or c. This is a GoogleNet architecture
 Hair Segmentation uses a U-Net architecture to segment hair pixels from images.
-
+The folder weights contains the pre-trained weights for segmentation and classification. The folder libs contains the functions used by main files.
 
 # Requirements:
 - Tensorflow >= 1.12
