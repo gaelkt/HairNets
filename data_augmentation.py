@@ -7,6 +7,7 @@ Created on Sun May 12 22:25:49 2019
 import os
 from keras.preprocessing.image import ImageDataGenerator, img_to_array, load_img
 
+# This function does data augmentation by applying random transformations on images
 
 def augmentation(folder_reduced, folder_augmented):
     
@@ -25,8 +26,8 @@ def augmentation(folder_reduced, folder_augmented):
     for j in len(allimages):
     
         img = load_img(folder_reduced+allimages[j]) # This is a PIL image
-        x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
-        x = x.reshape((1,) + x.shape)  # this is a Numpy array with shape (1, 3, 150, 150)
+        x = img_to_array(img)  # this is a Numpy array with shape (3, 224, 224)
+        x = x.reshape((1,) + x.shape)  # this is a Numpy array with shape (1, 3, 224, 224)
         
         i = 0
         for batch in datagen.flow(x, batch_size=1,
