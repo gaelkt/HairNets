@@ -8,7 +8,7 @@ Requirements:
 - Skimage
 - Opencv
 
-This work uses the Part Label Database as dataset for Hair Segmentation. The dataset can be downladed here:
+This work uses the Part Label Database as dataset for Hair Segmentation. The dataset can be downladed here:http://vis-www.cs.umass.edu/lfw/part_labels/
 
 -You need to create a folder datasets and insert three folders for the 'funneled images', 'Ground Truth Images' and 'Ground  Truth Labels' that you will download from the above link. 
 
