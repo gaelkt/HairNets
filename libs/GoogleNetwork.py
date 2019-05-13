@@ -78,7 +78,8 @@ class GoogLeNet(Network):
              .avg_pool(5, 5, 3, 3, padding='VALID', name='cls1_pool')
              .conv(1, 1, 128, 1, 1, name='cls1_reduction_pose')
              .fc(1024, name='fc_out_1')
-             .softmax(3, name='type_1'))
+             .fc(3, name='fc_out_1_soft')
+             .softmax(name='type_1'))
 
         (self.feed('icp3_out')
              .conv(1, 1, 112, 1, 1, name='icp4_reduction1')
@@ -141,7 +142,8 @@ class GoogLeNet(Network):
              .avg_pool(5, 5, 3, 3, padding='VALID', name='cls2_pool')
              .conv(1, 1, 128, 1, 1, name='cls2_reduction_pose')
              .fc(1024, name='fc_out_2')
-             .softmax(3 name='type_2'))
+             .fc(3, name='fc_out_2_soft')
+             .softmax(name='type_2'))
 
         (self.feed('icp6_out')
              .conv(1, 1, 160, 1, 1, name='icp7_reduction1')
@@ -204,5 +206,6 @@ class GoogLeNet(Network):
              .concat(3, name='icp9_out')
              .avg_pool(7, 7, 1, 1, padding='VALID', name='cls3_pool')
              .fc(2048, name='fc_out_3')
-             .softmax(3 name='type_3'))
+             .fc(3, name='fc_out_3_soft')
+             .softmax(name='type_3'))
 
