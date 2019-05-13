@@ -19,11 +19,11 @@ The folder weights contains the pre-trained weights for segmentation and classif
 
 -You need to create a folder datasets and insert three folders for the 'funneled images', 'Ground Truth Images' and 'Ground  Truth Labels' that you will download from this [link](http://vis-www.cs.umass.edu/lfw/part_labels/). 
 - Then run the file create_dataset.py to create and process the training data.
-- Run train.segmentation to train the network for segmentation
-- Run test_segmentation to test the segmentation on test images. The test images should be 224x224x3 and you need to store hair segment in a folder for data augmentation and hair classification
+- Run train.segmentation.py to train the network for segmentation
+- Run test_segmentation.py to test the segmentation on test images. The test images should be 224x224x3 and you need to store hair segment in a folder for data augmentation and hair classification
 
 # Part II: Data Augmentation
 Use data_augmentation.py and the hair segment obtained from Part I to apply random transformations and increase the volume of hair segments. Store the files in a folder
 
 # Part II: Classification
-Use train_classification.py to train the network for classifying hair type.
+Use train_classification.py to train the network for classifying hair type. You need to specify the location of each hair type folder.
