@@ -8,7 +8,7 @@ This repository contains the implementation of a deep learning algorithm to clas
 Hair Segmentation uses a U-Net architecture to segment hair pixels from images.
 
 
-#Requirements:
+# Requirements:
 - Tensorflow 1.12
 - Keras
 - Skimage
