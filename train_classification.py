@@ -12,7 +12,7 @@ import tensorflow as tf
 import numpy as np
 import scipy.io
 import sys
-sys.path.insert(0, 'lib/')
+sys.path.insert(0, 'libs/')
 from GoogleNetwork import GoogLeNet as DNN
 from keras.preprocessing.image import img_to_array, load_img
 
@@ -27,13 +27,12 @@ folder_data_b = 'datasets/224/augmentation/type_b/'
 folder_data_c = 'datasets/224/augmentation/type_c/'
 
 ###############                Parameters
-iterations = 1000
-batch_size = 61
+iterations = 500
+batch_size = 54
 number_channels = 3
 
 ############       loss in function of the number of iterations
-loss_hair_type = np.zeros((iterations))
-
+loss_hair_type = 100*np.zeros((iterations))
 
 #############            Function to read the training data
 # The file dataset_train.txt is read and parsed
@@ -164,12 +163,14 @@ new_batch = generate_batch_input_data(X_train, y_train, batch_size)
 
 saver = tf.train.Saver()
 
-outputFile = "/Save/Hair_Google.ckpt"
+outputFile = "Save2/model_3.ckpt"
 
 gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.9133)
 print('Starting training')
 with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
     sess.run(init)
+    saver = tf.train.import_meta_graph('Save2/model_last.ckpt.meta')
+    saver.restore(sess, "Save2/model_last.ckpt")
     for i in range(iterations):
         X_train_batch, y_train_batch = next(new_batch)
 
@@ -178,14 +179,17 @@ with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
         sess.run(opt, feed_dict=feed)
         
         loss_hair_type[i] = sess.run(loss, feed_dict=feed) # Only the last layer is considered as the prediction
-        if i % 40 == 0:
-            saver.save(sess, outputFile)
-            scipy.io.savemat('Save/loss_hair_iteration.mat', mdict={'loss_hair_iteration': loss_hair_type})
-        if i % 15 == 0:
-            print('iteration number ', i)
-            print(' ----------------------- loss ', loss_hair_type[i])
-    
-    saver.save(sess, outputFile)
 
-    
+
+        print('iteration number ', i)
+        print(' ----------------------- loss ', loss_hair_type[i])
+        saver.save(sess, outputFile)
+            
+        if (loss_hair_type[i] < 0.09):
+            saver.save(sess, "Save2/model_3.ckpt")
+            scipy.io.savemat('Save2/loss_hair_iteration.mat', mdict={'loss_hair_iteration': loss_hair_type})
+            break
+
+
 print('end of training') 
+

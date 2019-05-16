@@ -5,13 +5,6 @@ Created on Wed Apr 24 11:50:26 2019
 
 @author: gael
 """
-
-
-"""
-Created on Fri May 10 13:24:22 2019
-
-@author: g84120421
-"""
 import gc
 gc.collect()
 
@@ -23,9 +16,6 @@ plt.style.use("ggplot")
 
 from sklearn.model_selection import train_test_split
 
-import tensorflow as tf
-
-from keras.models import Model, load_model
 from keras.layers import Input, BatchNormalization, Activation, Dense, Dropout
 from keras.layers.core import Lambda, RepeatVector, Reshape
 
@@ -34,23 +24,22 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array, load_img
 
-print('Packet imported successfully')
-
 import sys
 sys.path.insert(0, 'libs/')
 from curliqfunctions import loading_training_faces_masks, visualize_face_mask, plot_sample
 from curliqnet import get_unet
+
+print('Packet imported successfully')
 # Set some parameters
 im_width = 224
 im_height = 224
 border = 5
-number_channel = 1
 train_images_folder = "datasets/224/hair_training/hair_training/"
 mask_images_folder = "datasets/224/hair_segment/hair_segment/"
 
 
 #We load images and mask from the dataset LBW
-#The data have been already preprocessed by another script to have 128x128 gray image
+#The data have been already preprocessed by another script to have 224x224x3 image
 #And to extract only hair segments
 X, y = loading_training_faces_masks(train_images_folder, mask_images_folder)
 
@@ -62,7 +51,7 @@ print('Shape validation set X_valid is ', np.shape(X_valid))
 print('Shape validation set y_valid is ', np.shape(y_valid))
 
 
-# Visualize any randome image along with the mask   
+# Visualize any random image along with the mask   
 visualize_face_mask(X_train, y_train)
 visualize_face_mask(X_train, y_train)
 visualize_face_mask(X_train, y_train)

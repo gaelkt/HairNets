@@ -4,9 +4,6 @@ Created on Thu May 16 01:37:32 2019
 
 @author: Gael
 """
-
-import gc
-gc.collect()
 import tensorflow as tf
 import numpy as np
 import scipy.io as sio
@@ -17,6 +14,7 @@ sys.path.insert(0, 'lib/')
 from GoogleNetwork import GoogLeNet as DNN
 
 from keras.preprocessing.image import img_to_array, load_img
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_recall_fscore_support, precision_score
 
 # This file is used for testing classification algorithm
 
@@ -63,12 +61,9 @@ def reading_testing_data(folder_data, hair_type):
     #We normalize the data by substracting the mean and scaling 
 def normalization_test(X_test, MEAN):
     # # Forcing the pixels and the poses to be coded as floats
-    X_test = X_test.astype('float32')
-    #substracting the mean
-    X_test2 = X_test - X_test.mean(axis=(0,1,2),keepdims=1)
-    #Scaling
-    X_test2 /= 1    # X_test2 /= 255 
-    return X_test2, y_test
+    for i in range(len(X_test)):
+        X_test[i] = X_test[i] - MEAN[0]
+    return X_test
 
    
 ##############################################################################
@@ -106,7 +101,7 @@ name_images = np.append(name_images_a, name_images_b)
 
 X_test = np.append(X_test, X_test_c, axis=0)
 y_test = np.append(y_test, y_test_c, axis=0)
-name_images = np.append(name_images_c, name_images)
+name_images = np.append(name_images, name_images_c)
 
 #Getting mean of training images
 path_save = "Save"
@@ -130,8 +125,9 @@ with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
     sess.run(init)
     
     # Loading the model 
-    saver = tf.train.import_meta_graph('Save/Hair_Google.ckpt.meta')
-    saver.restore(sess, "Save/Hair_Google.ckpt")
+    #model_last
+    saver = tf.train.import_meta_graph('Save2/model_3.ckpt.meta')
+    saver.restore(sess, "Save2/model_3.ckpt")
     
     for i in range(len(X_test)):
         # Timer starts
@@ -142,10 +138,19 @@ with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
         feed = {image: image_test_tensor}
         
         #Estimated parameters
-        type_pred_result[i] = sess.run([type_pred_3], feed_dict=feed)
+        output = sess.run([type_pred_3], feed_dict=feed)
+        type_pred_result[i] = np.argmax(output)
+        print('Predicted Hair Type',  type_pred_result[i], 'Actual Hair Type ', np.argmax(y_test[i]), 'Name ', name_images[i])
         
         # Timer ends
         end = time. time()
         duration[i] = end-start 
 
-print('Finish')   
+print('Finish')
+confusion_matrix(type_pred_result, np.argmax(y_test, axis=1))
+accuracy = accuracy_score(np.argmax(y_test, axis=1), type_pred_result)
+precision_recall_fscore_support(np.argmax(y_test, axis=1), type_pred_result)
+precision = precision_score(np.argmax(y_test, axis=1), type_pred_result, average='macro')
+print('Accuracy is ', accuracy)
+print('Precision is ', precision)
+        
